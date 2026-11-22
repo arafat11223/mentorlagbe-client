@@ -17,8 +17,8 @@ import { Button } from "../ui/Button";
 
 const navigationLinks = [
   { label: "Home", href: "/" },
-  { label: "Find Tutors", href: "/tutors" },
-  { label: "How It Works", href: "/how-it-works" },
+  { label: "Find Tuitions", href: "/tuitions" },
+  { label: "About Us", href: "/about" },
 ];
 
 export function Navbar() {
