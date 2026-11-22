@@ -1,7 +1,6 @@
+﻿"use client";
 
-"use client";
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -13,6 +12,7 @@ import {
 } from "lucide-react";
 
 import { authClient } from "../../lib/auth-client";
+import { apiRequest } from "../../lib/api/client";
 import { Button } from "../ui/Button";
 
 const navigationLinks = [
@@ -22,13 +22,89 @@ const navigationLinks = [
   { label: "About Us", href: "/about" },
 ];
 
+type UserRole = "student" | "tutor" | "admin";
+
+interface BusinessUserProfile {
+  role: UserRole;
+}
+
+interface RoleBadgeProps {
+  role: UserRole | null;
+  loading: boolean;
+}
+
+function RoleBadge({ role, loading }: RoleBadgeProps) {
+  if (loading) {
+    return (
+      <span className="h-6 w-16 animate-pulse rounded-full bg-surface-secondary" />
+    );
+  }
+
+  if (!role) {
+    return null;
+  }
+
+  const roleStyles: Record<UserRole, string> = {
+    student: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
+    tutor: "bg-primary/10 text-primary",
+    admin: "bg-amber-500/15 text-amber-700 dark:text-amber-400",
+  };
+
+  return (
+    <span
+      className={`inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ${roleStyles[role]}`}
+    >
+      {role}
+    </span>
+  );
+}
+
 export function Navbar() {
   const router = useRouter();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
+  const [businessRole, setBusinessRole] = useState<UserRole | null>(null);
+  const [roleLoading, setRoleLoading] = useState(false);
 
   const { data: session, isPending } = authClient.useSession();
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadBusinessProfile() {
+      if (!session?.user) {
+        setBusinessRole(null);
+        setRoleLoading(false);
+        return;
+      }
+
+      setRoleLoading(true);
+
+      try {
+        const response =
+          await apiRequest<BusinessUserProfile>("/api/users/me");
+
+        if (!cancelled) {
+          setBusinessRole(response.data?.role ?? null);
+        }
+      } catch {
+        if (!cancelled) {
+          setBusinessRole(null);
+        }
+      } finally {
+        if (!cancelled) {
+          setRoleLoading(false);
+        }
+      }
+    }
+
+    loadBusinessProfile();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [session?.user?.id]);
 
   function closeMobileMenu() {
     setMobileMenuOpen(false);
@@ -45,6 +121,7 @@ export function Navbar() {
         return;
       }
 
+      setBusinessRole(null);
       closeMobileMenu();
       router.replace("/signin");
       router.refresh();
@@ -61,7 +138,6 @@ export function Navbar() {
         aria-label="Main navigation"
         className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8"
       >
-        {/* Brand */}
         <Link
           href="/"
           onClick={closeMobileMenu}
@@ -76,7 +152,6 @@ export function Navbar() {
           </span>
         </Link>
 
-        {/* Desktop navigation */}
         <div className="hidden items-center gap-8 md:flex">
           {navigationLinks.map((link) => (
             <Link
@@ -89,22 +164,20 @@ export function Navbar() {
           ))}
         </div>
 
-        {/* Desktop authentication */}
         <div className="hidden items-center gap-3 md:flex">
           {isPending ? (
             <div className="h-9 w-28 animate-pulse rounded-lg bg-surface-secondary" />
           ) : session?.user ? (
             <>
-              <Link
-                href="/profile"
-                className="flex items-center gap-2 text-sm font-semibold text-foreground hover:text-primary"
-              >
-                <UserRound size={18} />
+              <div className="flex items-center gap-2">
+                <UserRound size={18} className="text-muted" />
 
-                <span className="max-w-32 truncate">
+                <span className="max-w-32 truncate text-sm font-semibold text-foreground">
                   {session.user.name || "My Account"}
                 </span>
-              </Link>
+
+                <RoleBadge role={businessRole} loading={roleLoading} />
+              </div>
 
               <Button
                 variant="outline"
@@ -135,7 +208,6 @@ export function Navbar() {
           )}
         </div>
 
-        {/* Mobile menu button */}
         <button
           type="button"
           aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
@@ -148,7 +220,6 @@ export function Navbar() {
         </button>
       </nav>
 
-      {/* Mobile navigation */}
       {mobileMenuOpen && (
         <div
           id="mobile-navigation"
@@ -171,14 +242,15 @@ export function Navbar() {
                 <p className="text-sm text-muted">Loading account...</p>
               ) : session?.user ? (
                 <div className="flex flex-col gap-3">
-                  <Link
-                    href="/profile"
-                    onClick={closeMobileMenu}
-                    className="flex items-center gap-2 px-3 py-2 text-sm font-semibold text-foreground"
-                  >
-                    <UserRound size={18} />
-                    {session.user.name || "My Account"}
-                  </Link>
+                  <div className="flex flex-wrap items-center gap-2 px-3 py-2">
+                    <UserRound size={18} className="text-muted" />
+
+                    <span className="text-sm font-semibold text-foreground">
+                      {session.user.name || "My Account"}
+                    </span>
+
+                    <RoleBadge role={businessRole} loading={roleLoading} />
+                  </div>
 
                   <Button
                     variant="outline"

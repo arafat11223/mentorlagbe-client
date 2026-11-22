@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
@@ -42,9 +42,7 @@ export default function SignupPage() {
         role,
       };
 
-      const result = await authClient.signUp.email(
-        signupData as Parameters<typeof authClient.signUp.email>[0]
-      );
+      const result = await authClient.signUp.email(signupData);
 
       if (result.error) {
         setError(result.error.message || "Registration failed.");
