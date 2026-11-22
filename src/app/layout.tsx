@@ -38,6 +38,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
+      data-scroll-behavior="smooth"
       className={`${inter.variable} ${manrope.variable} min-h-full antialiased`}
     >
       <body className="flex min-h-screen flex-col bg-background text-foreground">
