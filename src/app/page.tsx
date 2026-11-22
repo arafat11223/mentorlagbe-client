@@ -1,4 +1,5 @@
 
+import { LatestTuitions } from "../components/home/LatestTuitions";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -8,13 +9,10 @@ import {
   Search,
   UserPlus,
   ShieldCheck,
-  Monitor,
-  MapPin,
   Calculator,
   Atom,
   Languages,
   FlaskConical,
-  BookText,
   Laptop,
   Check,
   Sparkles,
@@ -149,7 +147,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Hero visual */}
+          {/* Hero Visual */}
           <div className="relative mx-auto w-full max-w-lg">
             <div className="absolute -left-5 top-10 h-32 w-32 rounded-full bg-primary/15 blur-3xl" />
             <div className="absolute -right-5 bottom-5 h-40 w-40 rounded-full bg-secondary/20 blur-3xl" />
@@ -221,6 +219,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Latest Tuitions */}
+      <LatestTuitions />
 
       {/* Popular Subjects */}
       <section className="bg-surface-secondary/40 py-20">
@@ -348,9 +349,7 @@ export default function Home() {
                   <h3 className="font-heading text-xl font-extrabold text-foreground">
                     Student Pro
                   </h3>
-                  <p className="text-sm text-muted">
-                    For students
-                  </p>
+                  <p className="text-sm text-muted">For students</p>
                 </div>
               </div>
 
@@ -405,9 +404,7 @@ export default function Home() {
                   <h3 className="font-heading text-xl font-extrabold text-foreground">
                     Tutor Pro
                   </h3>
-                  <p className="text-sm text-muted">
-                    For tutors
-                  </p>
+                  <p className="text-sm text-muted">For tutors</p>
                 </div>
               </div>
 

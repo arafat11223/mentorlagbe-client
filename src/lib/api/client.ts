@@ -1,4 +1,8 @@
-import type { ApiResponse } from "./types";
+
+import type {
+  ApiResponse,
+  ApiSuccessResponse,
+} from "./types";
 
 const API_BASE_URL = (
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
@@ -14,7 +18,6 @@ export class ApiError extends Error {
     status: "fail" | "error"
   ) {
     super(message);
-
     this.name = "ApiError";
     this.statusCode = statusCode;
     this.status = status;
@@ -28,7 +31,7 @@ interface ApiRequestOptions extends RequestInit {
 export async function apiRequest<T>(
   endpoint: string,
   options: ApiRequestOptions = {}
-): Promise<ApiResponse<T>> {
+): Promise<ApiSuccessResponse<T>> {
   const headers = new Headers(options.headers);
 
   if (
