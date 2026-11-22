@@ -1,5 +1,6 @@
 
 import { LatestTuitions } from "../components/home/LatestTuitions";
+import { PlatformStatistics } from "../components/home/PlatformStatistics";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -222,6 +223,9 @@ export default function Home() {
 
       {/* Latest Tuitions */}
       <LatestTuitions />
+
+      {/* Live Platform Statistics */}
+      <PlatformStatistics />
 
       {/* Popular Subjects */}
       <section className="bg-surface-secondary/40 py-20">
