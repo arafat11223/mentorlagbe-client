@@ -1,8 +1,17 @@
+
+export interface PaginationMetadata {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+
 export interface ApiSuccessResponse<T> {
   success: true;
   status: "success";
   message: string;
   data?: T;
+  pagination?: PaginationMetadata;
 }
 
 export interface ApiErrorResponse {
