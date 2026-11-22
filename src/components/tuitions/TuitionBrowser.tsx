@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import {
   Search,
   SlidersHorizontal,
@@ -322,7 +323,8 @@ export function TuitionBrowser() {
 
         {!isLoading && !error && (
           <p className="text-sm font-semibold text-muted">
-            {pagination.total} {pagination.total === 1 ? "result" : "results"} found
+            {pagination.total}{" "}
+            {pagination.total === 1 ? "result" : "results"} found
           </p>
         )}
       </div>
@@ -457,6 +459,14 @@ export function TuitionBrowser() {
                   By {tuition.tutorName}
                 </p>
               </div>
+
+              {/* View Details Link */}
+              <Link
+                href={`/tuitions/${encodeURIComponent(tuition._id)}`}
+                className="mt-5 inline-flex w-full items-center justify-center rounded-xl border border-primary px-4 py-3 text-sm font-bold text-primary transition hover:bg-primary hover:text-white"
+              >
+                View Tuition Details
+              </Link>
             </article>
           ))}
         </div>
