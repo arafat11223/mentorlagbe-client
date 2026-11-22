@@ -3,6 +3,9 @@ import type { Metadata } from "next";
 import { Inter, Manrope } from "next/font/google";
 
 import { Providers } from "./providers";
+import { Navbar } from "../components/layout/Navbar";
+import { Footer } from "../components/layout/Footer";
+
 import "./globals.css";
 
 const inter = Inter({
@@ -38,7 +41,15 @@ export default function RootLayout({
       className={`${inter.variable} ${manrope.variable} min-h-full antialiased`}
     >
       <body className="flex min-h-screen flex-col bg-background text-foreground">
-        <Providers>{children}</Providers>
+        <Providers>
+          <Navbar />
+
+          <div className="flex flex-1 flex-col">
+            {children}
+          </div>
+
+          <Footer />
+        </Providers>
       </body>
     </html>
   );
