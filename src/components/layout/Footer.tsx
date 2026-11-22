@@ -5,6 +5,7 @@ import { GraduationCap, Mail, MapPin } from "lucide-react";
 const footerLinks = {
   platform: [
     { label: "Find Tuitions", href: "/tuitions" },
+    { label: "Pricing", href: "/pricing" },
     { label: "About Us", href: "/about" },
     { label: "Sign Up", href: "/signup" },
   ],

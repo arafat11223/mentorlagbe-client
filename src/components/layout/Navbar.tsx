@@ -18,6 +18,7 @@ import { Button } from "../ui/Button";
 const navigationLinks = [
   { label: "Home", href: "/" },
   { label: "Find Tuitions", href: "/tuitions" },
+  { label: "Pricing", href: "/pricing" },
   { label: "About Us", href: "/about" },
 ];
 
