@@ -227,6 +227,15 @@ export function DashboardShell({ children }: DashboardShellProps) {
           },
         ]
       : []),
+    ...(role === "admin"
+      ? [
+          {
+            label: "Manage Tuitions",
+            href: "/dashboard/admin/tuitions",
+            icon: ShieldCheck,
+          },
+        ]
+      : []),
     {
       label: "Find Tuitions",
       href: "/tuitions",
