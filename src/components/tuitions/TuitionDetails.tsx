@@ -1,4 +1,4 @@
-
+﻿
 "use client";
 
 import { useEffect, useState } from "react";
@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 
 import { apiRequest, ApiError } from "../../lib/api/client";
+import { TuitionApplicationForm } from "../applications/TuitionApplicationForm";
 
 interface Tuition {
   _id: string;
@@ -39,7 +40,7 @@ interface TuitionDetailsProps {
 }
 
 function formatFee(fee: number) {
-  return `৳${fee.toLocaleString("en-BD")}`;
+  return `à§³${fee.toLocaleString("en-BD")}`;
 }
 
 function formatDate(date: string) {
@@ -307,9 +308,11 @@ export function TuitionDetails({ id }: TuitionDetailsProps) {
                 </div>
               </div>
             </div>
+            <TuitionApplicationForm tuitionId={id} />
           </div>
         </div>
       </div>
     </main>
   );
 }
+

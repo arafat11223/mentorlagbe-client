@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -8,6 +8,8 @@ import {
   LayoutDashboard,
   BookOpen,
   FileText,
+  ClipboardList,
+  Users,
   Menu,
   X,
   LogOut,
@@ -218,12 +220,26 @@ export function DashboardShell({ children }: DashboardShellProps) {
       href: getDashboardPath(role),
       icon: LayoutDashboard,
     },
+    ...(role === "student"
+      ? [
+          {
+            label: "My Applications",
+            href: "/dashboard/student/applications",
+            icon: ClipboardList,
+          },
+        ]
+      : []),
     ...(role === "tutor"
       ? [
           {
             label: "My Tuitions",
             href: "/dashboard/tutor/tuitions",
             icon: FileText,
+          },
+          {
+            label: "Applicants",
+            href: "/dashboard/tutor/applicants",
+            icon: Users,
           },
         ]
       : []),
@@ -405,3 +421,4 @@ export function DashboardShell({ children }: DashboardShellProps) {
     </div>
   );
 }
+
