@@ -156,12 +156,21 @@ export function DashboardShell({ children }: DashboardShellProps) {
   useEffect(() => {
     function handleProfileUpdate(event: Event) {
       const customEvent = event as CustomEvent<{
-        image: string | null;
+        image?: string | null;
+        name?: string;
       }>;
 
       setProfile((current) =>
         current
-          ? { ...current, image: customEvent.detail.image }
+          ? {
+              ...current,
+              ...(customEvent.detail.image !== undefined
+                ? { image: customEvent.detail.image }
+                : {}),
+              ...(customEvent.detail.name !== undefined
+                ? { name: customEvent.detail.name }
+                : {}),
+            }
           : current
       );
     }

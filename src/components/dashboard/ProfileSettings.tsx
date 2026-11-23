@@ -7,6 +7,9 @@ import {
   LoaderCircle,
   Trash2,
   UserRound,
+  Pencil,
+  Save,
+  X,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -24,6 +27,12 @@ interface ProfileData {
   plan: "free" | "pro";
 }
 
+interface ProfileFormData {
+  name: string;
+  phone: string;
+  bio: string;
+}
+
 interface ProfileSettingsProps {
   role: "student" | "tutor" | "admin";
 }
@@ -35,7 +44,17 @@ export function ProfileSettings({ role }: ProfileSettingsProps) {
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [removing, setRemoving] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [editing, setEditing] = useState(false);
   const [preview, setPreview] = useState("");
+
+  const [form, setForm] = useState<ProfileFormData>({
+    name: "",
+    phone: "",
+    bio: "",
+  });
+
+  const [formError, setFormError] = useState("");
 
   useEffect(() => {
     let cancelled = false;
@@ -78,12 +97,141 @@ export function ProfileSettings({ role }: ProfileSettingsProps) {
     };
   }, [preview]);
 
-  function notifyImageUpdate(image: string | null) {
+  function notifyProfileUpdate(
+    updates: { image?: string | null; name?: string }
+  ) {
     window.dispatchEvent(
       new CustomEvent("mentorlagbe:profile-updated", {
-        detail: { image },
+        detail: updates,
       })
     );
+  }
+
+  function startEditing() {
+    if (!profile) return;
+
+    setForm({
+      name: profile.name,
+      phone: profile.phone || "",
+      bio: profile.bio || "",
+    });
+
+    setFormError("");
+    setEditing(true);
+  }
+
+  function cancelEditing() {
+    if (!profile) return;
+
+    setForm({
+      name: profile.name,
+      phone: profile.phone || "",
+      bio: profile.bio || "",
+    });
+
+    setFormError("");
+    setEditing(false);
+  }
+
+  function updateForm(
+    field: keyof ProfileFormData,
+    value: string
+  ) {
+    setForm((current) => ({
+      ...current,
+      [field]: value,
+    }));
+
+    setFormError("");
+  }
+
+  async function handleProfileSave(
+    event: React.FormEvent<HTMLFormElement>
+  ) {
+    event.preventDefault();
+
+    if (!profile || saving) return;
+
+    const name = form.name.trim();
+    const phone = form.phone.trim();
+    const bio = form.bio.trim();
+
+    if (name.length < 2) {
+      setFormError("Name must contain at least 2 characters.");
+      return;
+    }
+
+    if (name.length > 80) {
+      setFormError("Name cannot exceed 80 characters.");
+      return;
+    }
+
+    if (phone.length > 30) {
+      setFormError("Phone number cannot exceed 30 characters.");
+      return;
+    }
+
+    if (bio.length > 500) {
+      setFormError("Bio cannot exceed 500 characters.");
+      return;
+    }
+
+    setSaving(true);
+    setFormError("");
+
+    try {
+      const response = await apiRequest<{
+        name: string;
+        phone: string | null;
+        bio: string;
+      }>("/api/users/me", {
+        method: "PATCH",
+        body: JSON.stringify({
+          name,
+          phone: phone || null,
+          bio,
+        }),
+      });
+
+      const updatedData = response.data;
+
+      if (!updatedData) {
+        throw new Error("Updated profile data was not returned.");
+      }
+
+      setProfile((current) =>
+        current
+          ? {
+              ...current,
+              ...updatedData,
+            }
+          : current
+      );
+
+      setForm({
+        name: updatedData.name,
+        phone: updatedData.phone || "",
+        bio: updatedData.bio,
+      });
+
+      setEditing(false);
+
+      notifyProfileUpdate({
+        name: updatedData.name,
+      });
+
+      toast.success("Profile updated successfully.");
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Unable to update your profile.";
+
+      setFormError(message);
+      toast.error(message);
+    } finally {
+      setSaving(false);
+    }
   }
 
   async function handleImageChange(
@@ -147,7 +295,7 @@ export function ProfileSettings({ role }: ProfileSettingsProps) {
       setPreview("");
       URL.revokeObjectURL(objectUrl);
 
-      notifyImageUpdate(imageUrl);
+      notifyProfileUpdate({ image: imageUrl });
       toast.success("Profile image updated successfully.");
     } catch (error) {
       setPreview("");
@@ -182,7 +330,7 @@ export function ProfileSettings({ role }: ProfileSettingsProps) {
       );
 
       setPreview("");
-      notifyImageUpdate(null);
+      notifyProfileUpdate({ image: null });
 
       toast.success("Profile image removed successfully.");
     } catch (error) {
@@ -312,76 +460,180 @@ export function ProfileSettings({ role }: ProfileSettingsProps) {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-border bg-surface shadow-[var(--shadow-card)]">
-        <div className="border-b border-border px-6 py-5 sm:px-8">
-          <h3 className="font-bold text-foreground">
-            Account Information
-          </h3>
-          <p className="mt-1 text-sm text-muted">
-            Your current account details.
-          </p>
+      <section className="overflow-hidden rounded-2xl border border-border bg-surface shadow-[var(--shadow-card)]">
+        <div className="flex flex-col gap-3 border-b border-border px-6 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+          <div>
+            <h3 className="font-bold text-foreground">
+              Account Information
+            </h3>
+            <p className="mt-1 text-sm text-muted">
+              Update your personal information.
+            </p>
+          </div>
+
+          {!editing && (
+            <Button type="button" onClick={startEditing}>
+              <Pencil size={16} />
+              Edit Profile
+            </Button>
+          )}
         </div>
 
-        <div className="grid gap-5 p-6 sm:grid-cols-2 sm:px-8 sm:py-7">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted">
-              Full Name
-            </p>
-            <p className="mt-2 break-words font-semibold text-foreground">
-              {profile.name}
-            </p>
-          </div>
+        {editing ? (
+          <form onSubmit={handleProfileSave} className="space-y-5 p-6 sm:px-8 sm:py-7">
+            <div>
+              <label
+                htmlFor="profile-name"
+                className="mb-2 block text-sm font-semibold text-foreground"
+              >
+                Full Name
+              </label>
+              <input
+                id="profile-name"
+                type="text"
+                required
+                minLength={2}
+                maxLength={80}
+                value={form.name}
+                onChange={(event) => updateForm("name", event.target.value)}
+                className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15"
+                placeholder="Enter your full name"
+              />
+            </div>
 
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted">
-              Email Address
-            </p>
-            <p className="mt-2 break-words font-semibold text-foreground">
-              {profile.email}
-            </p>
-          </div>
+            <div>
+              <label
+                htmlFor="profile-phone"
+                className="mb-2 block text-sm font-semibold text-foreground"
+              >
+                Phone Number
+              </label>
+              <input
+                id="profile-phone"
+                type="tel"
+                maxLength={30}
+                value={form.phone}
+                onChange={(event) => updateForm("phone", event.target.value)}
+                className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15"
+                placeholder="Enter your phone number"
+              />
+              <p className="mt-1 text-xs text-muted">
+                Leave empty if you do not want to add a phone number.
+              </p>
+            </div>
 
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted">
-              Account Role
-            </p>
-            <p className="mt-2 font-semibold capitalize text-foreground">
-              {profile.role}
-            </p>
-          </div>
+            <div>
+              <div className="mb-2 flex items-center justify-between gap-3">
+                <label
+                  htmlFor="profile-bio"
+                  className="text-sm font-semibold text-foreground"
+                >
+                  Bio
+                </label>
+                <span className="text-xs text-muted">
+                  {form.bio.length}/500
+                </span>
+              </div>
+              <textarea
+                id="profile-bio"
+                rows={4}
+                maxLength={500}
+                value={form.bio}
+                onChange={(event) => updateForm("bio", event.target.value)}
+                className="w-full resize-y rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15"
+                placeholder="Write a short introduction about yourself..."
+              />
+            </div>
 
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted">
-              Subscription Plan
-            </p>
-            <p className="mt-2 font-semibold uppercase text-foreground">
-              {profile.plan}
-            </p>
-          </div>
+            {formError && (
+              <p role="alert" className="rounded-xl bg-danger/10 px-4 py-3 text-sm text-danger">
+                {formError}
+              </p>
+            )}
 
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted">
-              Phone
-            </p>
-            <p className="mt-2 font-semibold text-foreground">
-              {profile.phone || "Not added"}
-            </p>
-          </div>
+            <div className="flex flex-wrap gap-3 border-t border-border pt-5">
+              <Button type="submit" disabled={saving}>
+                {saving ? (
+                  <LoaderCircle className="animate-spin" size={17} />
+                ) : (
+                  <Save size={17} />
+                )}
+                {saving ? "Saving..." : "Save Changes"}
+              </Button>
 
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted">
-              Bio
-            </p>
-            <p className="mt-2 font-semibold text-foreground">
-              {profile.bio || "No bio added"}
-            </p>
+              <Button
+                type="button"
+                variant="outline"
+                disabled={saving}
+                onClick={cancelEditing}
+              >
+                <X size={17} />
+                Cancel
+              </Button>
+            </div>
+          </form>
+        ) : (
+          <div className="grid gap-5 p-6 sm:grid-cols-2 sm:px-8 sm:py-7">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted">
+                Full Name
+              </p>
+              <p className="mt-2 break-words font-semibold text-foreground">
+                {profile.name}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted">
+                Email Address
+              </p>
+              <p className="mt-2 break-words font-semibold text-foreground">
+                {profile.email}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted">
+                Account Role
+              </p>
+              <p className="mt-2 font-semibold capitalize text-foreground">
+                {profile.role || role}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted">
+                Subscription Plan
+              </p>
+              <p className="mt-2 font-semibold uppercase text-foreground">
+                {profile.plan}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted">
+                Phone
+              </p>
+              <p className="mt-2 font-semibold text-foreground">
+                {profile.phone || "Not added"}
+              </p>
+            </div>
+
+            <div className="sm:col-span-2">
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted">
+                Bio
+              </p>
+              <p className="mt-2 whitespace-pre-wrap break-words font-semibold text-foreground">
+                {profile.bio || "No bio added"}
+              </p>
+            </div>
           </div>
-        </div>
+        )}
       </section>
 
       <p className="flex items-center gap-2 text-xs text-muted">
         <Camera size={15} />
-        Profile picture changes are reflected across your dashboard and website.
+        Profile picture and name changes are reflected across your dashboard.
       </p>
     </div>
   );
