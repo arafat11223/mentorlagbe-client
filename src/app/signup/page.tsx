@@ -11,6 +11,7 @@ import {
   Mail,
   UserRound,
 } from "lucide-react";
+import { toast } from "sonner";
 
 import { authClient } from "../../lib/auth-client";
 import { AuthLayout } from "../../components/auth/AuthLayout";
@@ -26,12 +27,10 @@ export default function SignupPage() {
   const [role, setRole] = useState<UserRole>("student");
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    setError("");
     setLoading(true);
 
     try {
@@ -45,14 +44,22 @@ export default function SignupPage() {
       const result = await authClient.signUp.email(signupData);
 
       if (result.error) {
-        setError(result.error.message || "Registration failed.");
+        toast.error(
+          result.error.message || "Registration failed."
+        );
         return;
       }
+
+      toast.success(
+        "Your account has been created successfully!"
+      );
 
       router.replace("/");
       router.refresh();
     } catch {
-      setError("Unable to create your account. Please try again.");
+      toast.error(
+        "Unable to create your account. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -233,15 +240,6 @@ export default function SignupPage() {
             </button>
           </div>
         </fieldset>
-
-        {error && (
-          <div
-            role="alert"
-            className="rounded-xl border border-danger/20 bg-danger/10 px-4 py-3 text-sm text-danger"
-          >
-            {error}
-          </div>
-        )}
 
         <button
           type="submit"

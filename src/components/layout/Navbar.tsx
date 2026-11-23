@@ -10,6 +10,7 @@ import {
   UserRound,
   LogOut,
 } from "lucide-react";
+import { toast } from "sonner";
 
 import { authClient } from "../../lib/auth-client";
 import { apiRequest } from "../../lib/api/client";
@@ -117,16 +118,21 @@ export function Navbar() {
       const result = await authClient.signOut();
 
       if (result.error) {
-        console.error("Sign out failed:", result.error.message);
+        toast.error(
+          result.error.message || "Unable to sign out. Please try again."
+        );
         return;
       }
 
       setBusinessRole(null);
       closeMobileMenu();
+
+      toast.success("You have signed out successfully.");
+
       router.replace("/signin");
       router.refresh();
-    } catch (error) {
-      console.error("Unable to sign out:", error);
+    } catch {
+      toast.error("Unable to sign out. Please try again.");
     } finally {
       setSigningOut(false);
     }

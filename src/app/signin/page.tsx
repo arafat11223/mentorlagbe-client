@@ -1,9 +1,10 @@
-"use client";
+﻿"use client";
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowRight, LockKeyhole, Mail } from "lucide-react";
+import { toast } from "sonner";
 
 import { authClient } from "../../lib/auth-client";
 import { AuthLayout } from "../../components/auth/AuthLayout";
@@ -13,14 +14,11 @@ export default function SigninPage() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    setError("");
     setLoading(true);
 
     try {
@@ -30,14 +28,18 @@ export default function SigninPage() {
       });
 
       if (result.error) {
-        setError(result.error.message || "Invalid email or password.");
+        toast.error(
+          result.error.message || "Invalid email or password."
+        );
         return;
       }
+
+      toast.success("Welcome back! You have signed in successfully.");
 
       router.replace("/");
       router.refresh();
     } catch {
-      setError("Unable to sign in. Please try again.");
+      toast.error("Unable to sign in. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -116,15 +118,6 @@ export default function SigninPage() {
             />
           </div>
         </div>
-
-        {error && (
-          <div
-            role="alert"
-            className="rounded-xl border border-danger/20 bg-danger/10 px-4 py-3 text-sm text-danger"
-          >
-            {error}
-          </div>
-        )}
 
         <button
           type="submit"

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 
@@ -8,6 +8,7 @@ import {
 } from "@tanstack/react-query";
 
 import { ThemeProvider } from "next-themes";
+import { Toaster } from "sonner";
 
 import { ThemeToggle } from "../components/ui/ThemeToggle";
 
@@ -43,6 +44,13 @@ export function Providers({ children }: ProvidersProps) {
         {children}
 
         <ThemeToggle />
+
+        <Toaster
+          position="top-right"
+          richColors
+          closeButton
+          theme="system"
+        />
       </QueryClientProvider>
     </ThemeProvider>
   );
