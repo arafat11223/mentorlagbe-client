@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 
 import Link from "next/link";
 import {
@@ -14,6 +15,12 @@ import {
   Wallet,
 } from "lucide-react";
 
+
+export const metadata: Metadata = {
+  title: "About Us",
+  description:
+    "Learn how MentorLagbe connects students and tutors through a trusted tuition and mentorship platform.",
+};
 const studentSteps = [
   {
     number: "01",

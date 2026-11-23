@@ -5,6 +5,7 @@ import { Inter, Manrope } from "next/font/google";
 import { Providers } from "./providers";
 import { Navbar } from "../components/layout/Navbar";
 import { Footer } from "../components/layout/Footer";
+import { defaultDescription, siteName, siteUrl } from "../lib/site";
 
 import "./globals.css";
 
@@ -21,12 +22,45 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
+  applicationName: siteName,
   title: {
     default: "MentorLagbe | Find Your Perfect Tutor",
     template: "%s | MentorLagbe",
   },
-  description:
-    "MentorLagbe connects students with qualified tutors. Find the right tuition and build your learning journey.",
+  description: defaultDescription,
+  keywords: [
+    "MentorLagbe",
+    "tuition finder Bangladesh",
+    "find tutors",
+    "home tuition",
+    "online tuition",
+    "private tutors",
+    "student tutor platform",
+  ],
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    siteName,
+    title: "MentorLagbe | Find Your Perfect Tutor",
+    description: defaultDescription,
+  },
+  twitter: {
+    card: "summary",
+    title: "MentorLagbe | Find Your Perfect Tutor",
+    description: defaultDescription,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
 };
 
 export default function RootLayout({

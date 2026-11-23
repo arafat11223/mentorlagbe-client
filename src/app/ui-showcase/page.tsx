@@ -15,6 +15,7 @@ import { Badge } from "../../components/ui/Badge";
 export const metadata: Metadata = {
   title: "UI Showcase",
   description: "MentorLagbe reusable UI component showcase.",
+  robots: { index: false, follow: false },
 };
 
 export default function UIShowcasePage() {
