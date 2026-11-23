@@ -1,4 +1,3 @@
-
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
@@ -21,7 +20,7 @@ const plans = [
   {
     name: "Student Pro",
     subtitle: "For students",
-    price: "৳1,000",
+    price: "$10",
     description:
       "Get access to the Student Pro membership and manage your learning opportunities.",
     icon: BookOpen,
@@ -38,7 +37,7 @@ const plans = [
   {
     name: "Tutor Pro",
     subtitle: "For tutors",
-    price: "৳1,500",
+    price: "$15",
     description:
       "Unlock unlimited tuition posting and manage your teaching opportunities.",
     icon: GraduationCap,

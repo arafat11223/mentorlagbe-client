@@ -1,4 +1,3 @@
-
 import { LatestTuitions } from "../components/home/LatestTuitions";
 import { PlatformStatistics } from "../components/home/PlatformStatistics";
 import Link from "next/link";
@@ -359,7 +358,7 @@ export default function Home() {
 
               <div className="mt-7">
                 <span className="font-heading text-4xl font-extrabold text-foreground">
-                  ৳1,000
+                  $10
                 </span>
                 <span className="ml-2 text-sm text-muted">
                   one-time
@@ -414,7 +413,7 @@ export default function Home() {
 
               <div className="mt-7">
                 <span className="font-heading text-4xl font-extrabold text-foreground">
-                  ৳1,500
+                  $15
                 </span>
                 <span className="ml-2 text-sm text-muted">
                   one-time
