@@ -1,10 +1,7 @@
-
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { Inter, Manrope } from "next/font/google";
-
 import { Providers } from "./providers";
-import { Navbar } from "../components/layout/Navbar";
-import { Footer } from "../components/layout/Footer";
+import { AppFrame } from "../components/layout/AppFrame";
 import { defaultDescription, siteName, siteUrl } from "../lib/site";
 
 import "./globals.css";
@@ -77,13 +74,7 @@ export default function RootLayout({
     >
       <body className="flex min-h-screen flex-col bg-background text-foreground">
         <Providers>
-          <Navbar />
-
-          <div className="flex flex-1 flex-col">
-            {children}
-          </div>
-
-          <Footer />
+          <AppFrame>{children}</AppFrame>
         </Providers>
       </body>
     </html>

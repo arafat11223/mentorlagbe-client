@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   GraduationCap,
+  LayoutDashboard,
   Menu,
   X,
   UserRound,
@@ -27,6 +28,10 @@ type UserRole = "student" | "tutor" | "admin";
 
 interface BusinessUserProfile {
   role: UserRole;
+}
+
+function getDashboardPath(role: UserRole) {
+  return `/dashboard/${role}`;
 }
 
 interface RoleBadgeProps {
@@ -175,6 +180,15 @@ export function Navbar() {
             <div className="h-9 w-28 animate-pulse rounded-lg bg-surface-secondary" />
           ) : session?.user ? (
             <>
+              {businessRole && (
+                <Link
+                  href={getDashboardPath(businessRole)}
+                  className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-primary transition hover:bg-primary/10"
+                >
+                  <LayoutDashboard size={17} />
+                  Dashboard
+                </Link>
+              )}
               <div className="flex items-center gap-2">
                 <UserRound size={18} className="text-muted" />
 
@@ -248,6 +262,17 @@ export function Navbar() {
                 <p className="text-sm text-muted">Loading account...</p>
               ) : session?.user ? (
                 <div className="flex flex-col gap-3">
+                  {businessRole && (
+                    <Link
+                      href={getDashboardPath(businessRole)}
+                      onClick={closeMobileMenu}
+                      className="flex items-center gap-3 rounded-lg bg-primary/10 px-3 py-3 text-sm font-semibold text-primary transition hover:bg-primary/15"
+                    >
+                      <LayoutDashboard size={18} />
+                      Dashboard
+                    </Link>
+                  )}
+
                   <div className="flex flex-wrap items-center gap-2 px-3 py-2">
                     <UserRound size={18} className="text-muted" />
 
@@ -296,3 +321,4 @@ export function Navbar() {
     </header>
   );
 }
+
