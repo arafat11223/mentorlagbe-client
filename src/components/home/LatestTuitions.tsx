@@ -211,9 +211,19 @@ export function LatestTuitions() {
                     </p>
                   </div>
 
-                  <p className="text-right text-xs text-muted">
+                  <div className="text-right">
+                  <p className="text-xs text-muted">
                     By {tuition.tutorName}
                   </p>
+
+                  <Link
+                    href={`/tuitions/${tuition._id}`}
+                    className="mt-2 inline-flex items-center gap-1 text-sm font-bold text-primary transition hover:gap-2"
+                  >
+                    View Details
+                    <ArrowRight size={15} />
+                  </Link>
+                </div>
                 </div>
               </article>
             ))}

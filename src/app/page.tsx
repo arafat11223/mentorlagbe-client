@@ -21,33 +21,23 @@ import {
 const subjects = [
   {
     name: "Mathematics",
-    description: "Build strong problem-solving skills.",
+    description: "Build strong problem-solving and analytical skills.",
     icon: Calculator,
   },
   {
     name: "Physics",
-    description: "Understand concepts and applications.",
+    description: "Understand scientific concepts and real-world applications.",
     icon: Atom,
   },
   {
-    name: "English",
-    description: "Improve language and communication.",
-    icon: Languages,
-  },
-  {
-    name: "Chemistry",
-    description: "Learn chemistry with clarity.",
-    icon: FlaskConical,
-  },
-  {
-    name: "Biology",
-    description: "Explore life sciences in depth.",
-    icon: BookOpen,
-  },
-  {
-    name: "ICT",
-    description: "Develop essential technology skills.",
+    name: "Programming",
+    description: "Develop coding skills and practical problem-solving abilities.",
     icon: Laptop,
+  },
+  {
+    name: "IELTS",
+    description: "Prepare for international English language proficiency.",
+    icon: Languages,
   },
 ];
 
