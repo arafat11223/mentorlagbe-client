@@ -152,6 +152,32 @@ export function DashboardShell({ children }: DashboardShellProps) {
     };
   }, [session?.user?.id, isPending, pathname, router]);
 
+  useEffect(() => {
+    function handleProfileUpdate(event: Event) {
+      const customEvent = event as CustomEvent<{
+        image: string | null;
+      }>;
+
+      setProfile((current) =>
+        current
+          ? { ...current, image: customEvent.detail.image }
+          : current
+      );
+    }
+
+    window.addEventListener(
+      "mentorlagbe:profile-updated",
+      handleProfileUpdate
+    );
+
+    return () => {
+      window.removeEventListener(
+        "mentorlagbe:profile-updated",
+        handleProfileUpdate
+      );
+    };
+  }, []);
+
   async function handleSignOut() {
     setSigningOut(true);
 
@@ -253,6 +279,11 @@ export function DashboardShell({ children }: DashboardShellProps) {
         ]
       : []),
     {
+      label: "Profile",
+      href: `/dashboard/${role}/profile`,
+      icon: UserRound,
+    },
+    {
       label: "Find Tuitions",
       href: "/tuitions",
       icon: BookOpen,
@@ -306,8 +337,14 @@ export function DashboardShell({ children }: DashboardShellProps) {
 
         <div className="border-b border-border px-6 py-6">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-secondary text-primary">
-              {role === "admin" ? (
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-secondary text-primary">
+              {profile.image ? (
+                <img
+                  src={profile.image}
+                  alt="Profile"
+                  className="h-full w-full object-cover"
+                />
+              ) : role === "admin" ? (
                 <ShieldCheck size={21} />
               ) : (
                 <UserRound size={21} />
@@ -408,8 +445,16 @@ export function DashboardShell({ children }: DashboardShellProps) {
               {profile.name || session.user.name || "Welcome"}
             </span>
 
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-primary">
-              <UserRound size={19} />
+            <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-secondary text-primary">
+              {profile.image ? (
+                <img
+                  src={profile.image}
+                  alt="Profile"
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <UserRound size={19} />
+              )}
             </div>
           </div>
         </header>
@@ -421,4 +466,5 @@ export function DashboardShell({ children }: DashboardShellProps) {
     </div>
   );
 }
+
 

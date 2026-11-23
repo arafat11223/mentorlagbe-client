@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -28,6 +28,7 @@ type UserRole = "student" | "tutor" | "admin";
 
 interface BusinessUserProfile {
   role: UserRole;
+  image?: string | null;
 }
 
 function getDashboardPath(role: UserRole) {
@@ -71,6 +72,7 @@ export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const [businessRole, setBusinessRole] = useState<UserRole | null>(null);
+  const [profileImage, setProfileImage] = useState<string | null>(null);
   const [roleLoading, setRoleLoading] = useState(false);
 
   const { data: session, isPending } = authClient.useSession();
@@ -81,6 +83,7 @@ export function Navbar() {
     async function loadBusinessProfile() {
       if (!session?.user) {
         setBusinessRole(null);
+        setProfileImage(null);
         setRoleLoading(false);
         return;
       }
@@ -93,10 +96,12 @@ export function Navbar() {
 
         if (!cancelled) {
           setBusinessRole(response.data?.role ?? null);
+          setProfileImage(response.data?.image ?? null);
         }
       } catch {
         if (!cancelled) {
           setBusinessRole(null);
+          setProfileImage(null);
         }
       } finally {
         if (!cancelled) {
@@ -111,6 +116,28 @@ export function Navbar() {
       cancelled = true;
     };
   }, [session?.user?.id]);
+
+  useEffect(() => {
+    function handleProfileUpdate(event: Event) {
+      const customEvent = event as CustomEvent<{
+        image: string | null;
+      }>;
+
+      setProfileImage(customEvent.detail.image);
+    }
+
+    window.addEventListener(
+      "mentorlagbe:profile-updated",
+      handleProfileUpdate
+    );
+
+    return () => {
+      window.removeEventListener(
+        "mentorlagbe:profile-updated",
+        handleProfileUpdate
+      );
+    };
+  }, []);
 
   function closeMobileMenu() {
     setMobileMenuOpen(false);
@@ -190,7 +217,17 @@ export function Navbar() {
                 </Link>
               )}
               <div className="flex items-center gap-2">
-                <UserRound size={18} className="text-muted" />
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-secondary text-primary">
+                  {profileImage ? (
+                    <img
+                      src={profileImage}
+                      alt="Profile"
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <UserRound size={18} />
+                  )}
+                </div>
 
                 <span className="max-w-32 truncate text-sm font-semibold text-foreground">
                   {session.user.name || "My Account"}
@@ -274,7 +311,17 @@ export function Navbar() {
                   )}
 
                   <div className="flex flex-wrap items-center gap-2 px-3 py-2">
-                    <UserRound size={18} className="text-muted" />
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-secondary text-primary">
+                  {profileImage ? (
+                    <img
+                      src={profileImage}
+                      alt="Profile"
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <UserRound size={18} />
+                  )}
+                </div>
 
                     <span className="text-sm font-semibold text-foreground">
                       {session.user.name || "My Account"}
