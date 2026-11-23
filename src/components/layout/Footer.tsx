@@ -1,17 +1,16 @@
-
-import Link from "next/link";
-import { GraduationCap, Mail, MapPin } from "lucide-react";
+﻿import Link from "next/link";
+import { GraduationCap, Mail, MapPin, ArrowUpRight } from "lucide-react";
 
 const footerLinks = {
   platform: [
+    { label: "Home", href: "/" },
     { label: "Find Tuitions", href: "/tuitions" },
     { label: "Pricing", href: "/pricing" },
     { label: "About Us", href: "/about" },
-    { label: "Sign Up", href: "/signup" },
   ],
   account: [
     { label: "Sign In", href: "/signin" },
-    { label: "My Profile", href: "/profile" },
+    { label: "Create Account", href: "/signup" },
   ],
 };
 
@@ -20,9 +19,13 @@ export function Footer() {
     <footer className="mt-auto border-t border-border bg-surface">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Brand information */}
+          {/* Brand and description */}
           <div className="lg:col-span-2">
-            <Link href="/" className="inline-flex items-center gap-2">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2"
+              aria-label="MentorLagbe home"
+            >
               <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-white">
                 <GraduationCap size={24} />
               </span>
@@ -39,13 +42,17 @@ export function Footer() {
             </p>
 
             <div className="mt-5 flex flex-col gap-3 text-sm text-muted">
-              <p className="flex items-center gap-2">
-                <Mail size={16} className="text-primary" />
+              <a
+                href="mailto:support@mentorlagbe.com"
+                className="flex w-fit items-center gap-2 transition-colors hover:text-primary"
+              >
+                <Mail size={16} className="shrink-0 text-primary" />
                 support@mentorlagbe.com
-              </p>
+                <ArrowUpRight size={13} />
+              </a>
 
               <p className="flex items-center gap-2">
-                <MapPin size={16} className="text-primary" />
+                <MapPin size={16} className="shrink-0 text-primary" />
                 Bangladesh
               </p>
             </div>
@@ -62,7 +69,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-muted transition hover:text-primary"
+                    className="text-sm text-muted transition-colors hover:text-primary"
                   >
                     {link.label}
                   </Link>
@@ -82,7 +89,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-muted transition hover:text-primary"
+                    className="text-sm text-muted transition-colors hover:text-primary"
                   >
                     {link.label}
                   </Link>
@@ -92,6 +99,7 @@ export function Footer() {
           </div>
         </div>
 
+        {/* Copyright */}
         <div className="mt-10 border-t border-border pt-6">
           <p className="text-center text-xs text-muted">
             © 2026 MentorLagbe. All rights reserved.
