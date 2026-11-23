@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -7,6 +7,7 @@ import {
   GraduationCap,
   LayoutDashboard,
   BookOpen,
+  FileText,
   Menu,
   X,
   LogOut,
@@ -217,6 +218,15 @@ export function DashboardShell({ children }: DashboardShellProps) {
       href: getDashboardPath(role),
       icon: LayoutDashboard,
     },
+    ...(role === "tutor"
+      ? [
+          {
+            label: "My Tuitions",
+            href: "/dashboard/tutor/tuitions",
+            icon: FileText,
+          },
+        ]
+      : []),
     {
       label: "Find Tuitions",
       href: "/tuitions",
