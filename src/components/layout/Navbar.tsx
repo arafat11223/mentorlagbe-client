@@ -119,7 +119,7 @@ export function Navbar() {
 
       if (result.error) {
         toast.error(
-          result.error.message || "Unable to sign out. Please try again."
+          result.error.message || "Unable to sign out. Please try again.",
         );
         return;
       }
@@ -198,7 +198,7 @@ export function Navbar() {
           ) : (
             <>
               <Link
-                href="/signin"
+                href="/sign-in"
                 className="text-sm font-semibold text-foreground transition hover:text-primary"
               >
                 Sign in
@@ -206,7 +206,7 @@ export function Navbar() {
 
               <Button
                 size="sm"
-                onClick={() => router.push("/signup")}
+                onClick={() => router.push("/sign-up")}
               >
                 Get Started
               </Button>
@@ -271,7 +271,7 @@ export function Navbar() {
               ) : (
                 <div className="flex flex-col gap-3">
                   <Link
-                    href="/signin"
+                    href="/sign-in"
                     onClick={closeMobileMenu}
                     className="rounded-lg border border-border px-4 py-2.5 text-center text-sm font-semibold text-foreground"
                   >
@@ -282,7 +282,7 @@ export function Navbar() {
                     className="w-full"
                     onClick={() => {
                       closeMobileMenu();
-                      router.push("/signup");
+                      router.push("/sign-up");
                     }}
                   >
                     Get Started

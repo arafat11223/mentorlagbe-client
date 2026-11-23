@@ -1,5 +1,10 @@
 ﻿import Link from "next/link";
-import { GraduationCap, Mail, MapPin, ArrowUpRight } from "lucide-react";
+import {
+  GraduationCap,
+  Mail,
+  MapPin,
+  ArrowUpRight,
+} from "lucide-react";
 
 const footerLinks = {
   platform: [
@@ -9,8 +14,8 @@ const footerLinks = {
     { label: "About Us", href: "/about" },
   ],
   account: [
-    { label: "Sign In", href: "/signin" },
-    { label: "Create Account", href: "/signup" },
+    { label: "Sign In", href: "/sign-in" },
+    { label: "Create Account", href: "/sign-up" },
   ],
 };
 
@@ -19,7 +24,6 @@ export function Footer() {
     <footer className="mt-auto border-t border-border bg-surface">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Brand and description */}
           <div className="lg:col-span-2">
             <Link
               href="/"
@@ -58,7 +62,6 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Platform links */}
           <div>
             <h3 className="font-heading text-sm font-bold text-foreground">
               Platform
@@ -78,7 +81,6 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Account links */}
           <div>
             <h3 className="font-heading text-sm font-bold text-foreground">
               Account
@@ -99,7 +101,6 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Copyright */}
         <div className="mt-10 border-t border-border pt-6">
           <p className="text-center text-xs text-muted">
             © 2026 MentorLagbe. All rights reserved.
