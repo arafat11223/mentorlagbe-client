@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PricingCheckoutButton, PaymentStatusNotice } from "../../components/payment/PricingCheckoutActions";
 import {
   ArrowRight,
   BookOpen,
@@ -19,6 +20,7 @@ export const metadata: Metadata = {
 const plans = [
   {
     name: "Student Pro",
+    role: "student" as const,
     subtitle: "For students",
     price: "$10",
     description:
@@ -32,10 +34,10 @@ const plans = [
     ],
     highlighted: false,
     buttonText: "Get Student Pro",
-    buttonHref: "/signup",
   },
   {
     name: "Tutor Pro",
+    role: "tutor" as const,
     subtitle: "For tutors",
     price: "$15",
     description:
@@ -49,7 +51,6 @@ const plans = [
     ],
     highlighted: true,
     buttonText: "Get Tutor Pro",
-    buttonHref: "/signup",
   },
 ];
 
@@ -77,6 +78,7 @@ const membershipHighlights = [
 export default function PricingPage() {
   return (
     <main className="flex-1 overflow-hidden">
+      <PaymentStatusNotice />
       {/* Hero */}
       <section className="relative bg-gradient-to-br from-primary/10 via-background to-secondary/10">
         <div className="mx-auto max-w-7xl px-4 py-20 text-center sm:px-6 md:py-24 lg:px-8">
@@ -236,18 +238,11 @@ export default function PricingPage() {
                     ))}
                   </ul>
 
-                  <Link
-                    href={plan.buttonHref}
-                    className={`mt-9 flex min-h-12 items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold transition ${
-                      plan.highlighted
-                        ? "bg-primary text-primary-foreground hover:opacity-90"
-                        : "border border-border text-foreground hover:border-primary hover:text-primary"
-                    }`}
-                  >
-                    {plan.buttonText}
-
-                    {plan.highlighted && <ArrowRight size={17} />}
-                  </Link>
+                  <PricingCheckoutButton
+                    role={plan.role}
+                    label={plan.buttonText}
+                    highlighted={plan.highlighted}
+                  />
                 </div>
               );
             })}

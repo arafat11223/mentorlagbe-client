@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -17,6 +17,7 @@ import {
   ShieldCheck,
   UserRound,
   AlertCircle,
+  CreditCard
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -246,6 +247,15 @@ export function DashboardShell({ children }: DashboardShellProps) {
       href: getDashboardPath(role),
       icon: LayoutDashboard,
     },
+    ...(role === "student" || role === "tutor"
+      ? [
+          {
+            label: "Payment History",
+            href: `/dashboard/${role}/payments`,
+            icon: CreditCard,
+          },
+        ]
+      : []),
     ...(role === "student"
       ? [
           {
