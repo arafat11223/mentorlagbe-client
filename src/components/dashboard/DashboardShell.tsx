@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -17,7 +18,7 @@ import {
   ShieldCheck,
   UserRound,
   AlertCircle,
-  CreditCard
+  CreditCard,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -151,7 +152,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
     return () => {
       cancelled = true;
     };
-  }, [session?.user?.id, isPending, pathname, router]);
+  }, [session?.user, isPending, pathname, router]);
 
   useEffect(() => {
     function handleProfileUpdate(event: Event) {
@@ -213,16 +214,21 @@ export function DashboardShell({ children }: DashboardShellProps) {
     if (error) {
       return (
         <main className="flex min-h-[70vh] items-center justify-center px-4">
-          <div className="w-full max-w-md rounded-2xl border border-border bg-surface p-8 text-center shadow-[var(--shadow-card)]">
-            <AlertCircle className="mx-auto text-danger" size={36} />
+          <div
+            role="alert"
+            className="w-full max-w-md rounded-2xl border border-border bg-surface p-8 text-center shadow-[var(--shadow-card)]"
+          >
+            <AlertCircle
+              className="mx-auto text-danger"
+              size={36}
+              aria-hidden="true"
+            />
 
             <h1 className="mt-4 text-xl font-bold text-foreground">
               Unable to load dashboard
             </h1>
 
-            <p className="mt-2 text-sm leading-6 text-muted">
-              {error}
-            </p>
+            <p className="mt-2 text-sm leading-6 text-muted">{error}</p>
 
             <Button
               className="mt-6"
@@ -236,9 +242,17 @@ export function DashboardShell({ children }: DashboardShellProps) {
     }
 
     return (
-      <main className="flex min-h-[70vh] items-center justify-center bg-background">
+      <main
+        className="flex min-h-[70vh] items-center justify-center bg-background"
+        role="status"
+        aria-live="polite"
+        aria-busy="true"
+      >
         <div className="text-center">
-          <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-primary/20 border-t-primary" />
+          <div
+            className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-primary/20 border-t-primary motion-reduce:animate-none"
+            aria-hidden="true"
+          />
           <p className="mt-4 text-sm font-medium text-muted">
             Verifying your account...
           </p>
@@ -321,10 +335,11 @@ export function DashboardShell({ children }: DashboardShellProps) {
       )}
 
       <aside
+        id="dashboard-sidebar"
         className={`
           fixed inset-y-0 left-0 z-50 flex w-72 flex-col
           border-r border-border bg-surface
-          transition-transform duration-200
+          transition-transform duration-200 motion-reduce:transition-none
           lg:translate-x-0
           ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"}
         `}
@@ -336,7 +351,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
             onClick={() => setMobileMenuOpen(false)}
           >
             <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-white">
-              <GraduationCap size={23} />
+              <GraduationCap size={23} aria-hidden="true" />
             </span>
 
             <span className="text-xl font-extrabold tracking-tight text-foreground">
@@ -350,7 +365,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
             onClick={() => setMobileMenuOpen(false)}
             className="rounded-lg p-2 text-muted hover:bg-surface-secondary lg:hidden"
           >
-            <X size={20} />
+            <X size={20} aria-hidden="true" />
           </button>
         </div>
 
@@ -358,15 +373,18 @@ export function DashboardShell({ children }: DashboardShellProps) {
           <div className="flex items-center gap-3">
             <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-secondary text-primary">
               {profile.image ? (
-                <img
+                <Image
                   src={profile.image}
-                  alt="Profile"
+                  alt={`${profile.name || "User"} profile`}
+                  width={44}
+                  height={44}
+                  unoptimized
                   className="h-full w-full object-cover"
                 />
               ) : role === "admin" ? (
-                <ShieldCheck size={21} />
+                <ShieldCheck size={21} aria-hidden="true" />
               ) : (
-                <UserRound size={21} />
+                <UserRound size={21} aria-hidden="true" />
               )}
             </div>
 
@@ -390,13 +408,19 @@ export function DashboardShell({ children }: DashboardShellProps) {
           <nav aria-label="Dashboard navigation" className="mt-3 space-y-1">
             {navigation.map((item) => {
               const Icon = item.icon;
-              const active = pathname === item.href;
+
+              const active =
+                item.label === "Overview"
+                  ? pathname === item.href
+                  : pathname === item.href ||
+                    pathname.startsWith(`${item.href}/`);
 
               return (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
+                  aria-current={active ? "page" : undefined}
                   className={`
                     flex items-center gap-3 rounded-xl px-3 py-3
                     text-sm font-semibold transition
@@ -407,7 +431,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
                     }
                   `}
                 >
-                  <Icon size={19} />
+                  <Icon size={19} aria-hidden="true" />
                   {item.label}
                 </Link>
               );
@@ -420,7 +444,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
             href="/"
             className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-muted transition hover:bg-surface-secondary hover:text-foreground"
           >
-            <ArrowUpRight size={18} />
+            <ArrowUpRight size={18} aria-hidden="true" />
             Back to website
           </Link>
 
@@ -430,7 +454,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
             onClick={handleSignOut}
             className="mt-1 flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-danger transition hover:bg-danger/10 disabled:opacity-50"
           >
-            <LogOut size={18} />
+            <LogOut size={18} aria-hidden="true" />
             {signingOut ? "Signing out..." : "Sign out"}
           </button>
         </div>
@@ -442,10 +466,12 @@ export function DashboardShell({ children }: DashboardShellProps) {
             <button
               type="button"
               aria-label="Open dashboard menu"
+              aria-expanded={mobileMenuOpen}
+              aria-controls="dashboard-sidebar"
               onClick={() => setMobileMenuOpen(true)}
               className="rounded-lg border border-border p-2 text-foreground hover:bg-surface-secondary lg:hidden"
             >
-              <Menu size={20} />
+              <Menu size={20} aria-hidden="true" />
             </button>
 
             <div>
@@ -466,13 +492,16 @@ export function DashboardShell({ children }: DashboardShellProps) {
 
             <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-secondary text-primary">
               {profile.image ? (
-                <img
+                <Image
                   src={profile.image}
-                  alt="Profile"
+                  alt={`${profile.name || "User"} profile`}
+                  width={44}
+                  height={44}
+                  unoptimized
                   className="h-full w-full object-cover"
                 />
               ) : (
-                <UserRound size={19} />
+                <UserRound size={19} aria-hidden="true" />
               )}
             </div>
           </div>
@@ -485,5 +514,3 @@ export function DashboardShell({ children }: DashboardShellProps) {
     </div>
   );
 }
-
-
