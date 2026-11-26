@@ -129,9 +129,9 @@ export default function TutorTuitionsPage() {
         params.set("approvalStatus", approvalFilter);
       }
 
-      const response = await apiRequest<TuitionRecord[]>(
+      const response = (await apiRequest<TuitionRecord[]>(
         `/api/tuitions/mine?${params.toString()}`
-      ) as TuitionListResponse;
+      )) as TuitionListResponse;
 
       setTuitions(response.data ?? []);
 
@@ -155,7 +155,7 @@ export default function TutorTuitionsPage() {
   }, [page, approvalFilter]);
 
   useEffect(() => {
-    void loadTuitions();
+    void Promise.resolve().then(() => loadTuitions());
   }, [loadTuitions]);
 
   async function handleToggleStatus(tuition: TuitionRecord) {
@@ -227,7 +227,7 @@ export default function TutorTuitionsPage() {
   }
 
   return (
-    <section className="space-y-6">
+    <section className="space-y-6" aria-busy={loading}>
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">
@@ -250,7 +250,7 @@ export default function TutorTuitionsPage() {
             onClick={() => void loadTuitions()}
             disabled={loading}
           >
-            <RefreshCw size={16} />
+            <RefreshCw size={16} aria-hidden="true" />
             Refresh
           </Button>
 
@@ -258,7 +258,7 @@ export default function TutorTuitionsPage() {
             href="/dashboard/tutor/tuitions/new"
             className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-primary px-5 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
           >
-            <Plus size={17} />
+            <Plus size={17} aria-hidden="true" />
             Create Tuition
           </Link>
         </div>
@@ -269,7 +269,7 @@ export default function TutorTuitionsPage() {
           <p className="text-sm font-semibold text-foreground">
             Your listings
           </p>
-          <p className="mt-1 text-sm text-muted">
+          <p className="mt-1 text-sm text-muted" aria-live="polite">
             {pagination.total} non-deleted tuition posts
           </p>
         </div>
@@ -299,9 +299,19 @@ export default function TutorTuitionsPage() {
       </Card>
 
       {loading ? (
-        <div className="grid gap-4">
+        <div
+          className="grid gap-4"
+          role="status"
+          aria-label="Loading tuition listings"
+        >
+          <span className="sr-only">Loading tuition listings...</span>
+
           {Array.from({ length: 3 }).map((_, index) => (
-            <Card key={index} className="animate-pulse p-6">
+            <Card
+              key={index}
+              className="animate-pulse p-6"
+              aria-hidden="true"
+            >
               <div className="h-5 w-2/5 rounded bg-surface-secondary" />
               <div className="mt-4 h-4 w-3/5 rounded bg-surface-secondary" />
               <div className="mt-6 h-10 w-full rounded bg-surface-secondary" />
@@ -310,26 +320,32 @@ export default function TutorTuitionsPage() {
         </div>
       ) : error ? (
         <Card className="p-8 text-center">
-          <AlertCircle className="mx-auto text-danger" size={36} />
+          <AlertCircle
+            className="mx-auto text-danger"
+            size={36}
+            aria-hidden="true"
+          />
 
           <h3 className="mt-4 text-lg font-bold text-foreground">
             Unable to load tuition listings
           </h3>
 
-          <p className="mt-2 text-sm text-muted">{error}</p>
+          <p className="mt-2 text-sm text-muted" role="alert">
+            {error}
+          </p>
 
           <Button
             className="mt-5"
             onClick={() => void loadTuitions()}
           >
-            <RefreshCw size={16} />
+            <RefreshCw size={16} aria-hidden="true" />
             Try again
           </Button>
         </Card>
       ) : tuitions.length === 0 ? (
         <Card className="px-6 py-14 text-center">
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-secondary text-primary">
-            <FileText size={27} />
+            <FileText size={27} aria-hidden="true" />
           </div>
 
           <h3 className="mt-5 text-lg font-bold text-foreground">
@@ -390,22 +406,22 @@ export default function TutorTuitionsPage() {
 
                         <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm text-muted">
                           <span className="inline-flex items-center gap-2">
-                            <BookOpen size={15} />
+                            <BookOpen size={15} aria-hidden="true" />
                             {tuition.subject}
                           </span>
 
                           <span className="inline-flex items-center gap-2">
-                            <FileText size={15} />
+                            <FileText size={15} aria-hidden="true" />
                             {tuition.classLevel}
                           </span>
 
                           <span className="inline-flex items-center gap-2">
-                            <MapPin size={15} />
+                            <MapPin size={15} aria-hidden="true" />
                             {tuition.location}
                           </span>
 
                           <span className="inline-flex items-center gap-2">
-                            <CalendarDays size={15} />
+                            <CalendarDays size={15} aria-hidden="true" />
                             {tuition.daysPerWeek} days/week
                           </span>
                         </div>
@@ -439,7 +455,7 @@ export default function TutorTuitionsPage() {
                             className="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-border bg-surface px-3 text-sm font-semibold text-foreground transition hover:bg-surface-secondary"
                             aria-label={`Edit ${tuition.title}`}
                           >
-                            <Pencil size={15} />
+                            <Pencil size={15} aria-hidden="true" />
                             Edit
                           </Link>
 
@@ -448,11 +464,12 @@ export default function TutorTuitionsPage() {
                             variant="outline"
                             disabled={busy}
                             onClick={() => void handleToggleStatus(tuition)}
+                            aria-label={`${tuition.isActive ? "Deactivate" : "Activate"} ${tuition.title}`}
                           >
                             {tuition.isActive ? (
-                              <ToggleRight size={16} />
+                              <ToggleRight size={16} aria-hidden="true" />
                             ) : (
-                              <ToggleLeft size={16} />
+                              <ToggleLeft size={16} aria-hidden="true" />
                             )}
                             {tuition.isActive ? "Deactivate" : "Activate"}
                           </Button>
@@ -464,7 +481,7 @@ export default function TutorTuitionsPage() {
                             onClick={() => void handleDelete(tuition)}
                             aria-label={`Delete ${tuition.title}`}
                           >
-                            <Trash2 size={15} />
+                            <Trash2 size={15} aria-hidden="true" />
                           </Button>
                         </div>
                       </div>
@@ -476,20 +493,23 @@ export default function TutorTuitionsPage() {
           </div>
 
           <div className="flex flex-col gap-3 border-t border-border pt-5 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm text-muted">
+            <p className="text-sm text-muted" aria-live="polite">
               Showing {tuitions.length} of {pagination.total} listings
               {" · "}
               Page {pagination.page} of {Math.max(pagination.totalPages, 1)}
             </p>
 
-            <div className="flex items-center gap-2">
+            <nav
+              className="flex items-center gap-2"
+              aria-label="Tuition listings pagination"
+            >
               <Button
                 size="sm"
                 variant="outline"
                 disabled={page <= 1 || loading}
                 onClick={() => setPage((current) => current - 1)}
               >
-                <ChevronLeft size={16} />
+                <ChevronLeft size={16} aria-hidden="true" />
                 Previous
               </Button>
 
@@ -502,9 +522,9 @@ export default function TutorTuitionsPage() {
                 onClick={() => setPage((current) => current + 1)}
               >
                 Next
-                <ChevronRight size={16} />
+                <ChevronRight size={16} aria-hidden="true" />
               </Button>
-            </div>
+            </nav>
           </div>
         </>
       )}
