@@ -1,6 +1,7 @@
-﻿"use client";
+"use client";
 
 import {
+  ArrowUpRight,
   BookOpen,
   CheckCircle2,
   FileText,
@@ -15,6 +16,7 @@ import {
   PlanBadge,
 } from "../../../components/dashboard/DashboardOverview";
 import { useDashboardStats } from "../../../components/dashboard/useDashboardStats";
+import { Card } from "../../../components/ui/Card";
 
 interface TutorDashboardStats {
   totalTuitions: number;
@@ -41,7 +43,7 @@ export default function TutorDashboardPage() {
   }
 
   return (
-    <section>
+    <section className="space-y-7">
       <DashboardPageHeading
         eyebrow="Tutor workspace"
         title="Your Teaching Overview"
@@ -82,15 +84,38 @@ export default function TutorDashboardPage() {
         />
       </div>
 
-      <div className="mt-7 rounded-2xl border border-border bg-surface p-6">
-        <h3 className="text-base font-bold text-foreground">
-          Build your teaching presence
-        </h3>
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-          Keep your teaching profile and tuition opportunities organized.
-          Your dashboard statistics update from your account activity.
-        </p>
-      </div>
+      <Card className="overflow-hidden">
+        <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+          <div className="flex min-w-0 items-start gap-4">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-secondary text-primary">
+              <BookOpen size={21} />
+            </div>
+
+            <div className="min-w-0">
+              <p className="text-xs font-bold uppercase tracking-wider text-primary">
+                Teaching tip
+              </p>
+
+              <h3 className="mt-1 text-base font-bold text-foreground">
+                Build your teaching presence
+              </h3>
+
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
+                Keep your teaching profile and tuition opportunities
+                organized. Your dashboard statistics update from your
+                account activity.
+              </p>
+            </div>
+          </div>
+
+          <div
+            aria-hidden="true"
+            className="hidden shrink-0 text-muted/60 sm:block"
+          >
+            <ArrowUpRight size={22} />
+          </div>
+        </div>
+      </Card>
     </section>
   );
 }
