@@ -1,22 +1,26 @@
-﻿"use client";
+"use client";
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import {
   CalendarDays,
   Check,
+  ChevronLeft,
+  ChevronRight,
   Clock3,
   LoaderCircle,
   RefreshCw,
   UserRound,
   X,
-  XCircle,
 } from "lucide-react";
 import { toast } from "sonner";
 
 import { apiRequest, ApiError } from "../../../../lib/api/client";
+import type { PaginationMetadata } from "../../../../lib/api/types";
 
 type ApplicationStatus = "pending" | "accepted" | "rejected" | "cancelled";
+
+const PAGE_SIZE = 10;
 
 interface TutorApplication {
   _id: string;
@@ -83,14 +87,31 @@ export default function TutorApplicantsClient() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState<PaginationMetadata>({
+    page: 1,
+    limit: PAGE_SIZE,
+    total: 0,
+    totalPages: 0,
+  });
 
   const loadApplications = useCallback(async () => {
-    setLoading(true);
-    setError("");
+
 
     try {
-      const response = await apiRequest<unknown>("/api/applications/tutor");
+      const response = await apiRequest<unknown>(
+        `/api/applications/tutor?page=${page}&limit=${PAGE_SIZE}`
+      );
+
       setApplications(getApplications(response.data));
+      setPagination(
+        response.pagination ?? {
+          page,
+          limit: PAGE_SIZE,
+          total: 0,
+          totalPages: 0,
+        }
+      );
     } catch (err) {
       setError(
         err instanceof ApiError
@@ -100,10 +121,14 @@ export default function TutorApplicantsClient() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [page]);
 
   useEffect(() => {
-    void loadApplications();
+    const timeoutId = setTimeout(() => {
+      void loadApplications();
+    }, 0);
+
+    return () => clearTimeout(timeoutId);
   }, [loadApplications]);
 
   async function updateStatus(
@@ -137,7 +162,13 @@ export default function TutorApplicantsClient() {
           : "Application rejected."
       );
 
-      await loadApplications();
+      if (applications.length === 1 && page > 1) {
+        setPage((currentPage) => currentPage - 1);
+      } else {
+        setLoading(true);
+        setError("");
+        await loadApplications();
+      }
     } catch (err) {
       toast.error(
         err instanceof ApiError
@@ -173,16 +204,38 @@ export default function TutorApplicantsClient() {
       </div>
 
       {loading ? (
-        <div className="mt-8 flex items-center justify-center rounded-2xl border border-border bg-surface p-12">
-          <LoaderCircle className="animate-spin text-primary" size={26} />
-          <span className="ml-3 text-sm text-muted">Loading applicants...</span>
+        <div className="mt-8 grid gap-5" aria-label="Loading applicants">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <div
+              key={index}
+              className="animate-pulse rounded-2xl border border-border bg-surface p-5 sm:p-6"
+            >
+              <div className="flex justify-between gap-4">
+                <div className="flex-1 space-y-3">
+                  <div className="h-5 w-24 rounded-lg bg-surface-secondary" />
+                  <div className="h-6 w-2/3 rounded-lg bg-surface-secondary" />
+                  <div className="h-4 w-1/3 rounded-lg bg-surface-secondary" />
+                </div>
+                <div className="h-7 w-24 rounded-lg bg-surface-secondary" />
+              </div>
+              <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                <div className="h-12 rounded-lg bg-surface-secondary" />
+                <div className="h-12 rounded-lg bg-surface-secondary" />
+              </div>
+              <div className="mt-5 h-10 rounded-lg bg-surface-secondary" />
+            </div>
+          ))}
         </div>
       ) : error ? (
         <div className="mt-8 rounded-2xl border border-border bg-surface p-8 text-center">
           <p className="text-sm text-muted">{error}</p>
           <button
             type="button"
-            onClick={() => void loadApplications()}
+            onClick={() => {
+              setLoading(true);
+              setError("");
+              void loadApplications();
+            }}
             className="mt-4 inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold text-white"
           >
             <RefreshCw size={16} />
@@ -200,6 +253,7 @@ export default function TutorApplicantsClient() {
           </p>
         </div>
       ) : (
+        <>
         <div className="mt-8 grid gap-5">
           {applications.map((application) => (
             <article
@@ -315,8 +369,62 @@ export default function TutorApplicantsClient() {
             </article>
           ))}
         </div>
+
+        {pagination.total > 0 && (
+          <div className="mt-6 flex flex-col justify-between gap-4 rounded-2xl border border-border bg-surface p-4 sm:flex-row sm:items-center">
+            <p className="text-sm text-muted">
+              Showing{" "}
+              <span className="font-bold text-foreground">
+                {(page - 1) * PAGE_SIZE + 1}
+              </span>
+              {" - "}
+              <span className="font-bold text-foreground">
+                {Math.min(page * PAGE_SIZE, pagination.total)}
+              </span>
+              {" of "}
+              <span className="font-bold text-foreground">
+                {pagination.total}
+              </span>
+              {" applicants"}
+            </p>
+
+            <div className="flex items-center justify-between gap-3 sm:justify-end">
+              <button
+                type="button"
+                disabled={page <= 1 || loading}
+                onClick={() => {
+                  setLoading(true);
+                  setError("");
+                  setPage((currentPage) => currentPage - 1);
+                }}
+                className="inline-flex items-center gap-2 rounded-xl border border-border px-4 py-2.5 text-sm font-bold text-foreground transition hover:bg-surface-secondary disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <ChevronLeft size={16} />
+                Previous
+              </button>
+
+              <span className="whitespace-nowrap text-sm font-semibold text-muted">
+                Page {page} of {Math.max(pagination.totalPages, 1)}
+              </span>
+
+              <button
+                type="button"
+                disabled={page >= pagination.totalPages || loading}
+                onClick={() => {
+                  setLoading(true);
+                  setError("");
+                  setPage((currentPage) => currentPage + 1);
+                }}
+                className="inline-flex items-center gap-2 rounded-xl border border-border px-4 py-2.5 text-sm font-bold text-foreground transition hover:bg-surface-secondary disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                Next
+                <ChevronRight size={16} />
+              </button>
+            </div>
+          </div>
+        )}
+        </>
       )}
     </section>
   );
 }
-
