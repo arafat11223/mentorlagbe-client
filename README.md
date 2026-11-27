@@ -1,86 +1,95 @@
-﻿# MentorLagbe — Find Tutors. Build Futures.
+﻿# MentorLagbe — Tuition Management Platform
 
-MentorLagbe is a full-stack tuition management platform designed to connect students with tutors through a structured, role-based system.
+MentorLagbe is a full-stack tuition management platform that connects students with tutors. Students can discover tuition opportunities and manage applications, tutors can publish tuition posts and manage applicants, and administrators can monitor and moderate the platform.
 
-Students can explore tuition opportunities and manage applications, tutors can publish and manage tuition posts, and administrators can review and approve tuition listings.
+## Screenshots
 
-## Key Features
+### Home Page
 
-### Authentication and User Accounts
-- Student and Tutor registration
-- Email/password authentication
-- Role-based access
+**Full Page Preview**
+
+<img src="./public/screenshots/01-home-full-page.png" width="420" alt="MentorLagbe home page" />
+
+**Guest and Authenticated Views**
+
+| Guest View | Authenticated View |
+|---|---|
+| <img src="./public/screenshots/05-home-guest.png" width="100%" alt="Guest home page" /> | <img src="./public/screenshots/04-home-authenticated.png" width="100%" alt="Authenticated home page" /> |
+
+### Role-Based Dashboards
+
+| Tutor Dashboard | Student Dashboard |
+|---|---|
+| <img src="./public/screenshots/02-tutor-dashboard.png" width="100%" alt="Tutor dashboard" /> | <img src="./public/screenshots/03-student-dashboard.png" width="100%" alt="Student dashboard" /> |
+
+**Admin Dashboard**
+
+<img src="./public/screenshots/06-admin-dashboard.png" width="100%" alt="Admin dashboard" />
+
+### Pricing and Membership
+
+**Full Page Preview**
+
+<img src="./public/screenshots/07-pricing-full-page.png" width="420" alt="Pricing page" />
+
+| Pricing Hero | Membership Highlights |
+|---|---|
+| <img src="./public/screenshots/08-pricing-hero.png" width="100%" alt="Pricing hero" /> | <img src="./public/screenshots/09-pricing-highlights.png" width="100%" alt="Membership highlights" /> |
+
+| Membership Plans | CTA and Footer |
+|---|---|
+| <img src="./public/screenshots/10-pricing-plan-cards.png" width="100%" alt="Membership plans" /> | <img src="./public/screenshots/11-pricing-cta-footer.png" width="100%" alt="Pricing CTA and footer" /> |
+
+### Find Tuitions
+
+| Hero Section | Search and Results |
+|---|---|
+| <img src="./public/screenshots/12-find-tuitions-hero.png" width="100%" alt="Find tuitions hero" /> | <img src="./public/screenshots/13-find-tuitions-results.png" width="100%" alt="Tuition search results" /> |
+
+## Features
+
+- Role-based experiences for students, tutors, and administrators
+- Student and tutor registration and authentication
+- Browse and search approved tuition opportunities
+- Tuition details and application management
+- Tutor tuition posting and applicant management
+- Admin dashboard and tuition moderation
+- Student and tutor membership plans
+- One-time membership checkout through Stripe
 - User profile management
-
-### Student Features
-- Browse available tuition opportunities
-- View tuition details
-- Apply for tuition opportunities
-- Manage submitted applications
-- View payment history
-- Manage profile
-
-### Tutor Features
-- Create and manage tuition posts
-- Edit existing tuition posts
-- Manage applicants
-- View payment history
-- Manage profile
-- Free plan posting limit
-- Pro membership option
-
-### Admin Features
-- Admin dashboard
-- Review and approve tuition posts
-- Manage tuition listings
-- Admin profile
-
-### Platform Features
-- Responsive interface
-- Dashboard navigation
-- Light and dark theme support
-- Form validation
-- Notifications
-- Loading, error, and not-found states
-- Pricing and membership pages
-- Stripe Checkout integration
+- Responsive interface and theme support
 
 ## Technology Stack
 
-| Category | Technology |
-|---|---|
-| Framework | Next.js 16 |
-| UI Library | React 19 |
-| Language | TypeScript |
-| Styling | Tailwind CSS 4 |
-| UI Components | HeroUI |
-| Authentication | Better Auth |
-| Data Fetching | TanStack React Query |
-| Forms | React Hook Form |
-| Validation | Zod |
-| Notifications | Sonner |
-| Icons | Lucide React |
-| Theme | next-themes |
+### Frontend
+- Next.js 16
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- HeroUI
+- TanStack React Query
+- React Hook Form and Zod
+- Better Auth
+- next-themes
+- Lucide React
+
+### Backend
+- Node.js
+- Express 5
+- TypeScript
+- MongoDB
+- Better Auth
+- Stripe
+- Zod
 
 ## Project Structure
 
 ```text
 mentorlagbe-client/
 ├── public/
+│   └── screenshots/
 ├── src/
 │   ├── app/
-│   │   ├── (auth)/
-│   │   ├── (public)/
-│   │   ├── about/
-│   │   ├── dashboard/
-│   │   │   ├── admin/
-│   │   │   ├── student/
-│   │   │   └── tutor/
-│   │   ├── payment/
-│   │   ├── pricing/
-│   │   ├── sign-in/
-│   │   ├── sign-up/
-│   │   └── tuitions/
 │   ├── components/
 │   ├── config/
 │   ├── hooks/
@@ -91,116 +100,61 @@ mentorlagbe-client/
 └── README.md
 ```
 
-## Application Pages
-
-| Route | Purpose |
-|---|---|
-| `/` | Homepage |
-| `/about` | About page |
-| `/tuitions` | Tuition listings |
-| `/tuitions/[id]` | Tuition details |
-| `/pricing` | Membership pricing |
-| `/sign-in` | Sign-in |
-| `/sign-up` | Sign-up |
-| `/signin` | Sign-in route |
-| `/signup` | Sign-up route |
-| `/dashboard/student` | Student dashboard |
-| `/dashboard/student/applications` | Student applications |
-| `/dashboard/student/payments` | Student payment history |
-| `/dashboard/student/profile` | Student profile |
-| `/dashboard/tutor` | Tutor dashboard |
-| `/dashboard/tutor/tuitions` | Tutor tuition management |
-| `/dashboard/tutor/tuitions/new` | Create tuition |
-| `/dashboard/tutor/applicants` | Applicant management |
-| `/dashboard/tutor/payments` | Tutor payment history |
-| `/dashboard/tutor/profile` | Tutor profile |
-| `/dashboard/admin` | Admin dashboard |
-| `/dashboard/admin/tuitions` | Admin tuition management |
-| `/dashboard/admin/profile` | Admin profile |
-| `/payment/success` | Checkout return page |
-
 ## Getting Started
 
 ### Prerequisites
-
 - Node.js
 - npm
 - MentorLagbe backend running locally
 
-### 1. Clone the repository
+### Installation
 
 ```bash
 git clone https://github.com/arafat11223/mentorlagbe-client.git
 cd mentorlagbe-client
-```
-
-### 2. Install dependencies
-
-```bash
 npm install
 ```
 
-### 3. Configure environment variables
+### Environment Variables
 
-Create a `.env.local` file in the project root.
+Create a `.env.local` file in the project root:
 
 ```env
-NEXT_PUBLIC_API_URL=http://localhost:5000
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_API_URL=
+NEXT_PUBLIC_SITE_URL=
 ```
 
-Use the correct backend URL for your environment.
+Set the appropriate local or deployed URLs. Never commit private credentials or secret values.
 
-### 4. Start the development server
+### Run Development Server
 
 ```bash
 npm run dev
 ```
 
-Open:
+Open [http://localhost:3000](http://localhost:3000).
 
-http://localhost:3000
+### Production Build
 
-## Available Scripts
+```bash
+npm run build
+npm run start
+```
 
-| Command | Description |
-|---|---|
-| `npm run dev` | Start development server |
-| `npm run build` | Create production build |
-| `npm run start` | Start production server |
-| `npm run lint` | Run ESLint |
+### Lint
 
-## Backend Integration
-
-The frontend communicates with the MentorLagbe Express API.
-
-Default local API URL:
-
-`http://localhost:5000`
-
-Configure `NEXT_PUBLIC_API_URL` when using another backend environment.
-
-## Payment Integration
-
-MentorLagbe uses Stripe Checkout for one-time membership payments.
-
-- Student Pro: USD 10
-- Tutor Pro: USD 15
-- Payment mode: One-time payment
-- Membership activation: Verified backend webhook
-
-**Testing status:** Stripe Sandbox checkout and webhook verification are still pending final end-to-end confirmation. Do not treat a pending payment page as proof of successful membership activation.
+```bash
+npm run lint
+```
 
 ## Related Repository
 
-Backend repository:
-
-https://github.com/arafat11223/mentorlagbe-server
+**Backend:** [mentorlagbe-server](https://github.com/arafat11223/mentorlagbe-server)
 
 ## Project Status
 
-Frontend implementation and dashboard UX work are complete. Final Stripe Sandbox verification remains pending.
+The main platform features, role-based dashboards, tuition workflows, membership interface, and payment integration have been implemented. Stripe webhook-based payment confirmation still requires final end-to-end verification.
 
 ## License
 
-This repository is maintained as a portfolio project.
+Developed for educational and portfolio purposes.
