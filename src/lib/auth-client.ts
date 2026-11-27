@@ -1,9 +1,15 @@
 ﻿import { createAuthClient } from "better-auth/react";
 import { inferAdditionalFields } from "better-auth/client/plugins";
 
-const API_BASE_URL = (
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
-).replace(/\/+$/, "");
+const API_BASE_URL =
+  process.env.NODE_ENV === "production"
+    ? typeof window !== "undefined"
+      ? window.location.origin
+      : "https://mentorlagbe-server-wi7f.onrender.com"
+    : (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000").replace(
+        /\/+$/,
+        ""
+      );
 
 export const authClient = createAuthClient({
   baseURL: API_BASE_URL,

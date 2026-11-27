@@ -1,12 +1,17 @@
-
-import type {
+﻿import type {
   ApiResponse,
   ApiSuccessResponse,
 } from "./types";
 
-const API_BASE_URL = (
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
-).replace(/\/+$/, "");
+const API_BASE_URL =
+  process.env.NODE_ENV === "production"
+    ? typeof window !== "undefined"
+      ? ""
+      : "https://mentorlagbe-server-wi7f.onrender.com"
+    : (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000").replace(
+        /\/+$/,
+        ""
+      );
 
 export class ApiError extends Error {
   public readonly statusCode: number;
