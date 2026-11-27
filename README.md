@@ -1,50 +1,6 @@
-﻿# MentorLagbe — Tuition Management Platform
+# MentorLagbe — Tuition Management Platform
 
 MentorLagbe is a full-stack tuition management platform that connects students with tutors. Students can discover tuition opportunities and manage applications, tutors can publish tuition posts and manage applicants, and administrators can monitor and moderate the platform.
-
-## Screenshots
-
-### Home Page
-
-**Full Page Preview**
-
-<img src="./public/screenshots/01-home-full-page.png" width="420" alt="MentorLagbe home page" />
-
-**Guest and Authenticated Views**
-
-| Guest View | Authenticated View |
-|---|---|
-| <img src="./public/screenshots/05-home-guest.png" width="100%" alt="Guest home page" /> | <img src="./public/screenshots/04-home-authenticated.png" width="100%" alt="Authenticated home page" /> |
-
-### Role-Based Dashboards
-
-| Tutor Dashboard | Student Dashboard |
-|---|---|
-| <img src="./public/screenshots/02-tutor-dashboard.png" width="100%" alt="Tutor dashboard" /> | <img src="./public/screenshots/03-student-dashboard.png" width="100%" alt="Student dashboard" /> |
-
-**Admin Dashboard**
-
-<img src="./public/screenshots/06-admin-dashboard.png" width="100%" alt="Admin dashboard" />
-
-### Pricing and Membership
-
-**Full Page Preview**
-
-<img src="./public/screenshots/07-pricing-full-page.png" width="420" alt="Pricing page" />
-
-| Pricing Hero | Membership Highlights |
-|---|---|
-| <img src="./public/screenshots/08-pricing-hero.png" width="100%" alt="Pricing hero" /> | <img src="./public/screenshots/09-pricing-highlights.png" width="100%" alt="Membership highlights" /> |
-
-| Membership Plans | CTA and Footer |
-|---|---|
-| <img src="./public/screenshots/10-pricing-plan-cards.png" width="100%" alt="Membership plans" /> | <img src="./public/screenshots/11-pricing-cta-footer.png" width="100%" alt="Pricing CTA and footer" /> |
-
-### Find Tuitions
-
-| Hero Section | Search and Results |
-|---|---|
-| <img src="./public/screenshots/12-find-tuitions-hero.png" width="100%" alt="Find tuitions hero" /> | <img src="./public/screenshots/13-find-tuitions-results.png" width="100%" alt="Tuition search results" /> |
 
 ## Features
 
@@ -87,7 +43,6 @@ MentorLagbe is a full-stack tuition management platform that connects students w
 ```text
 mentorlagbe-client/
 ├── public/
-│   └── screenshots/
 ├── src/
 │   ├── app/
 │   ├── components/
